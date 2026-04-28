@@ -1,24 +1,50 @@
 import { createBrowserRouter } from "react-router";
 import { HeroPage } from "@/heroes/pages/hero/HeroPage";
 import { HomePage } from "@/heroes/pages/home/HomePage";
-import { SearchPage } from "@/heroes/pages/search/SearchPage";
+// import { SearchPage } from "@/heroes/pages/search/SearchPage";
 import { AdminPage } from "@/admin/pages/AdminPage";
+import { HeroesLayout } from "@/heroes/layouts/HeroesLayout";
+import { AdminLayout } from "@/admin/layout/AdminLayout";
+import { lazy } from "react";
+
+const SearchPage = lazy(() =>
+  import("@/heroes/pages/search/SearchPage").then((module) => ({
+    default: module.SearchPage,
+  })),
+);
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomePage />,
+    element: <HeroesLayout />,
+    children: [
+      {
+        // path: "", esto o index: true, es lo mismo, es para indicar que esta ruta es la raíz del layout
+        index: true,
+        element: <HomePage />,
+      },
+      {
+        path: "heroes/1",
+        element: <HeroPage />,
+      },
+      {
+        path: "search",
+        element: <SearchPage />,
+      },
+    ],
   },
   {
-    path: '/hero/1',
-    element: <HeroPage />,
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      {
+        index: true,
+        element: <AdminPage />,
+      },
+    ],
   },
   {
-    path: '/search',
-    element: <SearchPage />,
+    path: "*",
+    element: <HeroesLayout />,
   },
-  {
-    path: '/admin',
-    element: <AdminPage />
-  }
-])
+]);
