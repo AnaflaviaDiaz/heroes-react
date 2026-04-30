@@ -6,11 +6,26 @@ import { SearchControl } from "@/heroes/ui/SearchControl";
 import { HeroGrid } from "@/heroes/components/HeroGrid";
 import { CustomPagination } from "@/components/custom/CustomPagination";
 import { CustomBreadcrumbs } from "@/components/custom/CustomBreadcrumbs";
+import { getHeroesByPageAction } from "@/heroes/actions/get-heroes-by-page.action";
+import { useQuery } from "@tanstack/react-query";
 
 type TabsType = "all" | "favorites" | "villains" | "heroes";
 
 export const HomePage = () => {
   const [activeTab, setActiveTab] = useState<TabsType>("all");
+
+  const { data: heroesResponse } = useQuery({
+    queryKey: ["heroes"], // espacio en memoria para guardar el resultado de la peticion,
+    queryFn: () => getHeroesByPageAction(), //funcion para disparar cuando eso suceda
+    staleTime: 1000 * 60 * 5, // 5min, cuanto tiempo va a considerar que la peticion es fresca
+  });
+
+  console.log(heroesResponse);
+
+  // con tanStack se busca evitar usar efectos
+  // useEffect(() => {
+  //   getHeroesByPage().then();
+  // }, [])
 
   return (
     <>
@@ -55,19 +70,19 @@ export const HomePage = () => {
 
         <TabsContent value="all">
           <h1>All Characters</h1>
-          <HeroGrid />
+          <HeroGrid heroes={heroesResponse?.heroes || []} />
         </TabsContent>
         <TabsContent value="favorites">
           <h1>Favorites</h1>
-          <HeroGrid />
+          <HeroGrid heroes={heroesResponse?.heroes || []} />
         </TabsContent>
         <TabsContent value="heroes">
           <h1>Heroes</h1>
-          <HeroGrid />
+          <HeroGrid heroes={heroesResponse?.heroes || []} />
         </TabsContent>
         <TabsContent value="villains">
           <h1>Villains</h1>
-          <HeroGrid />
+          <HeroGrid heroes={heroesResponse?.heroes || []} />
         </TabsContent>
       </Tabs>
 
