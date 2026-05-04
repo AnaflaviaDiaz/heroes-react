@@ -7,6 +7,7 @@ import { HeroesLayout } from "@/heroes/layouts/HeroesLayout";
 import { AdminLayout } from "@/admin/layout/AdminLayout";
 import { lazy } from "react";
 
+// eslint-disable-next-line react-refresh/only-export-components
 const SearchPage = lazy(() =>
   import("@/heroes/pages/search/SearchPage").then((module) => ({
     default: module.SearchPage,
@@ -24,7 +25,7 @@ export const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "heroes/1",
+        path: "heroes/:id",
         element: <HeroPage />,
       },
       {
@@ -45,6 +46,6 @@ export const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <HeroesLayout />,
+    element: <h1>404</h1>,
   },
 ]);
