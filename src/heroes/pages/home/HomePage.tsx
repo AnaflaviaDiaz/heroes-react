@@ -1,6 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "react-router";
-// import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CustomJumbotron } from "@/components/custom/CustomJumbotron";
 import { HeroStats } from "@/heroes/components/HeroStats";
@@ -8,53 +5,49 @@ import { SearchControl } from "@/heroes/ui/SearchControl";
 import { HeroGrid } from "@/heroes/components/HeroGrid";
 import { CustomPagination } from "@/components/custom/CustomPagination";
 import { CustomBreadcrumbs } from "@/components/custom/CustomBreadcrumbs";
-import { getHeroesByPageAction } from "@/heroes/actions/get-heroes-by-page.action";
+import { useHeroSummary } from "@/heroes/hooks/useHeroSummary";
+import { useHeroPaginated } from "@/heroes/hooks/useHeroPaginated";
+import { useHomePagination } from "@/heroes/hooks/useHomePagination";
 
 type TabsType = "all" | "favorites" | "villains" | "heroes";
 
 export const HomePage = () => {
-  // const [activeTab, setActiveTab] = useState<TabsType>("all");
+  const {
+    currentPageSearchParam,
+    currentLimitSearchParam,
+    currentCategorySearchParam,
+    activeTab,
+    setSearchParams,
+  } = useHomePagination();
 
-  // queryParameters => más datos que se pondrán en la url
-  const [searchParams, setSearchParams] = useSearchParams();
+  // => GET ALL HEROES
+  const { data: heroesResponse } = useHeroPaginated(
+    +currentPageSearchParam,
+    +currentLimitSearchParam,
+    currentCategorySearchParam,
+  );
 
-  const currentLimitSearchParam = searchParams.get("limit") || 6;
-
-  const currentPageSearchParam = searchParams.get("page") || 1;
-
-  const currentTabSearchParam = searchParams.get("tab") || "all";
-  const activeTab = ["all", "favorites", "villains", "heroes"]?.includes(
-    currentTabSearchParam,
-  )
-    ? currentTabSearchParam
-    : "all";
-
-  const { data: heroesResponse } = useQuery({
-    // si va a haber algo de los datos que puede cambiar, es mejor que el key se componga con un
-    // objeto que lleve la pagina y el limite
-    queryKey: [
-      "heroes",
-      { page: currentPageSearchParam, limit: currentLimitSearchParam },
-    ], // espacio en memoria para guardar el resultado de la peticion,
-    queryFn: () =>
-      //funcion para disparar cuando eso suceda
-      getHeroesByPageAction(+currentPageSearchParam, +currentLimitSearchParam),
-    // 5min, cuanto tiempo va a considerar que la peticion es fresca
-    staleTime: 1000 * 60 * 5,
-  });
-
-  console.log(heroesResponse);
-
-  // con tanStack se busca evitar usar efectos
-  // useEffect(() => {
-  //   getHeroesByPage().then();
-  // }, [])
+  // => GET SUMMARY STATS
+  const { data: summary } = useHeroSummary();
 
   const handleSetTab = (tab: TabsType) => {
     setSearchParams((prev) => {
+      prev.set("page", '1');
       prev.set("tab", tab);
+      prev.set("category", getCategoryName(tab));
       return prev;
     });
+  };
+
+  const getCategoryName = (tab: TabsType) => {
+    switch (tab) {
+      case "heroes":
+        return "Hero";
+      case "villains":
+        return "Villain";
+      default:
+        return "all";
+    }
   };
 
   return (
@@ -78,7 +71,7 @@ export const HomePage = () => {
       <Tabs value={activeTab} className="mb-8">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="all" onClick={() => handleSetTab("all")}>
-            All Characters (16)
+            All Characters ({summary?.totalCharacters})
           </TabsTrigger>
           <TabsTrigger
             value="favorites"
@@ -88,13 +81,13 @@ export const HomePage = () => {
             Favorites (3)
           </TabsTrigger>
           <TabsTrigger value="heroes" onClick={() => handleSetTab("heroes")}>
-            Heroes (12)
+            Heroes ({summary?.heroCount})
           </TabsTrigger>
           <TabsTrigger
             value="villains"
             onClick={() => handleSetTab("villains")}
           >
-            Villains (2)
+            Villains ({summary?.villainCount})
           </TabsTrigger>
         </TabsList>
 
