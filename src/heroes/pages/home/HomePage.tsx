@@ -1,3 +1,4 @@
+import { use } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CustomJumbotron } from "@/components/custom/CustomJumbotron";
 import { HeroStats } from "@/heroes/components/HeroStats";
@@ -8,10 +9,13 @@ import { CustomBreadcrumbs } from "@/components/custom/CustomBreadcrumbs";
 import { useHeroSummary } from "@/heroes/hooks/useHeroSummary";
 import { useHeroPaginated } from "@/heroes/hooks/useHeroPaginated";
 import { useHomePagination } from "@/heroes/hooks/useHomePagination";
+import { FavoriteHeroContext } from "@/heroes/context/FavoriteHeroContext";
 
 type TabsType = "all" | "favorites" | "villains" | "heroes";
 
 export const HomePage = () => {
+  const { favoriteCount, favorites } = use(FavoriteHeroContext);
+
   const {
     currentPageSearchParam,
     currentLimitSearchParam,
@@ -32,7 +36,7 @@ export const HomePage = () => {
 
   const handleSetTab = (tab: TabsType) => {
     setSearchParams((prev) => {
-      prev.set("page", '1');
+      prev.set("page", "1");
       prev.set("tab", tab);
       prev.set("category", getCategoryName(tab));
       return prev;
@@ -78,7 +82,7 @@ export const HomePage = () => {
             className="flex items-center gap-2"
             onClick={() => handleSetTab("favorites")}
           >
-            Favorites (3)
+            Favorites ({favoriteCount})
           </TabsTrigger>
           <TabsTrigger value="heroes" onClick={() => handleSetTab("heroes")}>
             Heroes ({summary?.heroCount})
@@ -97,7 +101,7 @@ export const HomePage = () => {
         </TabsContent>
         <TabsContent value="favorites">
           <h1>Favorites</h1>
-          <HeroGrid heroes={heroesResponse?.heroes || []} />
+          <HeroGrid heroes={favorites || []} />
         </TabsContent>
         <TabsContent value="heroes">
           <h1>Heroes</h1>
@@ -110,7 +114,9 @@ export const HomePage = () => {
       </Tabs>
 
       {/* Pagination */}
-      <CustomPagination totalPages={heroesResponse?.pages ?? 1} />
+      {activeTab !== "favorites" && (
+        <CustomPagination totalPages={heroesResponse?.pages ?? 1} />
+      )}
     </>
   );
 };
