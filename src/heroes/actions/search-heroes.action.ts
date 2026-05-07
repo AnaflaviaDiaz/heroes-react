@@ -1,5 +1,5 @@
-import { heroApi } from "../api/hero.api";
-import type { Hero } from "../types/hero.interface";
+import { heroApi } from '../api/hero.api';
+import type { Hero } from '../types/hero.interface';
 
 interface Options {
   name?: string;
@@ -18,7 +18,8 @@ export const searchHeroesAction = async (params: Options) => {
     !params.category &&
     !params.status &&
     !params.team &&
-    !params.universe
+    !params.universe &&
+    !params.strength
   ) {
     return [];
   }

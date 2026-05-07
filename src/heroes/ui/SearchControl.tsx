@@ -19,12 +19,9 @@ export const SearchControl = () => {
 
   const handleKeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const value = inputRef.current?.value;
-    if (event.key === "Enter") {
-      searchParams.set("name", value || '');
-      setSearchParams((prev) => {
-        prev.set("name", value || '');
-        return prev;
-      });
+    if (event.key === 'Enter') {
+      searchParams.set('name', value || '');
+      setQueryParams('name', value || '');
     }
   };
 

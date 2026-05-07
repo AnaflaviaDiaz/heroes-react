@@ -1,12 +1,12 @@
-import { useSearchParams } from "react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from 'react-router';
+import { useQuery } from '@tanstack/react-query';
 
-import { CustomBreadcrumbs } from "@/components/custom/CustomBreadcrumbs";
-import { CustomJumbotron } from "@/components/custom/CustomJumbotron";
-import { searchHeroesAction } from "@/heroes/actions/search-heroes.action";
-import { HeroGrid } from "@/heroes/components/HeroGrid";
-import { HeroStats } from "@/heroes/components/HeroStats";
-import { SearchControl } from "@/heroes/ui/SearchControl";
+import { CustomBreadcrumbs } from '@/components/custom/CustomBreadcrumbs';
+import { CustomJumbotron } from '@/components/custom/CustomJumbotron';
+import { searchHeroesAction } from '@/heroes/actions/search-heroes.action';
+import { HeroGrid } from '@/heroes/components/HeroGrid';
+import { HeroStats } from '@/heroes/components/HeroStats';
+import { SearchControl } from '@/heroes/ui/SearchControl';
 
 export const SearchPage = () => {
   const [searchParams] = useSearchParams();
@@ -24,12 +24,12 @@ export const SearchPage = () => {
     <>
       {/* Header */}
       <CustomJumbotron
-        title="Search Heroes"
-        subtitle="Find your favorite superheroes and villains"
+        title='Search Heroes'
+        subtitle='Find your favorite superheroes and villains'
       />
 
       {/* Breadcrumbs */}
-      <CustomBreadcrumbs currentPage="Search" />
+      <CustomBreadcrumbs currentPage='Search' />
 
       {/* Stats Dashboard */}
       <HeroStats />
