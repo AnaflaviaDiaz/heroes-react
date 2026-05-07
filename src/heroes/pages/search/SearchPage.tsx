@@ -11,11 +11,19 @@ import { SearchControl } from '@/heroes/ui/SearchControl';
 export const SearchPage = () => {
   const [searchParams] = useSearchParams();
 
-  const currentNameSearchParam = searchParams.get("name") || '';
+  const currentNameSearchParam = searchParams.get('name') || '';
+  const currentStrengthSearchParam = searchParams.get('strength') || '';
 
+  const params = {
+    name: currentNameSearchParam,
+    strength: currentStrengthSearchParam,
+  };
   const { data: searchData = [] } = useQuery({
-    queryKey: ["searchHeroes", { name: currentNameSearchParam }],
-    queryFn: () => searchHeroesAction({ name: currentNameSearchParam }),
+    queryKey: [
+      'searchHeroes',
+      params,
+    ],
+    queryFn: () => searchHeroesAction(params),
     staleTime: 1000 * 60 * 5, // 5min
     retry: false,
   });
