@@ -8,7 +8,7 @@ import { HeroGrid } from '@/heroes/components/HeroGrid';
 import { HeroStats } from '@/heroes/components/HeroStats';
 import { SearchControl } from '@/heroes/ui/SearchControl';
 
-export const SearchPage = () => {
+export default function SearchPage() {
   const [searchParams] = useSearchParams();
 
   const currentNameSearchParam = searchParams.get('name') || '';
