@@ -9,3 +9,8 @@
 3. Ejecutar `npm install`
 
 4. Ejecutar `npm run dev`
+
+## Desplegado en:
+
+[heroes-netlify](https://astonishing-cupcake-da6c49.netlify.app/)  y 
+[heroes-githubpages](https://anaflaviadiaz.github.io/heroes-react/)
