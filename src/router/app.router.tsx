@@ -1,5 +1,6 @@
 import { lazy } from 'react';
-import { createBrowserRouter } from 'react-router';
+import { createHashRouter } from 'react-router';
+
 import { HeroPage } from '@/heroes/pages/hero/HeroPage';
 import { HomePage } from '@/heroes/pages/home/HomePage';
 import { AdminPage } from '@/admin/pages/AdminPage';
@@ -9,7 +10,8 @@ import { AdminLayout } from '@/admin/layout/AdminLayout';
 // eslint-disable-next-line react-refresh/only-export-components
 const SearchPage = lazy(() => import('@/heroes/pages/search/SearchPage'));
 
-export const router = createBrowserRouter([
+// export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: '/',
     element: <HeroesLayout />,
